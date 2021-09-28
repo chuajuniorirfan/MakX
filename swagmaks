@@ -1,0 +1,413 @@
+local Script = Instance.new("ScreenGui")
+local Open = Instance.new("TextButton")
+local Makx = Instance.new("Frame")
+local Fly = Instance.new("TextButton")
+local HoodShark = Instance.new("TextButton")
+local SwagMode = Instance.new("TextButton")
+local AntiLose = Instance.new("TextButton")
+local FishReach = Instance.new("TextButton")
+local CrashServer = Instance.new("TextButton")
+local Cancel = Instance.new("TextButton")
+local Faded = Instance.new("TextButton")
+local AutoArrest = Instance.new("TextButton")
+local AutoDrop = Instance.new("TextButton")
+local News = Instance.new("TextLabel")
+local RayCodeX = Instance.new("TextButton")
+local Nova = Instance.new("TextButton")
+local AutoRob = Instance.new("TextButton")
+local Coming = Instance.new("TextLabel")
+
+Script.Name = "Script"
+Script.Parent = game.CoreGui
+Script.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Open.Name = "Open"
+Open.Parent = Script
+Open.BackgroundColor3 = Color3.fromRGB(79, 79, 79)
+Open.BorderSizePixel = 0
+Open.Position = UDim2.new(0.425182462, 0, 0, 0)
+Open.Size = UDim2.new(0.148722634, 0, 0.0755467191, 0)
+Open.Font = Enum.Font.GothamSemibold
+Open.Text = "Open"
+Open.TextColor3 = Color3.fromRGB(0, 0, 0)
+Open.TextScaled = true
+Open.TextSize = 14.000
+Open.TextWrapped = true
+
+Makx.Name = "Makx"
+Makx.Parent = Script
+Makx.BackgroundColor3 = Color3.fromRGB(62, 62, 62)
+Makx.BorderSizePixel = 0
+Makx.Position = UDim2.new(0.351277381, 0, 0.111332007, 0)
+Makx.Size = UDim2.new(0.29653284, 0, 0.576540768, 0)
+Makx.Visible = false
+Makx.Active = true
+Makx.Draggable = true
+
+Fly.Name = "Fly"
+Fly.Parent = Makx
+Fly.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+Fly.BorderSizePixel = 0
+Fly.Position = UDim2.new(0.024212271, 0, 0.0379310362, 0)
+Fly.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+Fly.Font = Enum.Font.GothamBlack
+Fly.Text = "Fly(X)"
+Fly.TextColor3 = Color3.fromRGB(0, 0, 0)
+Fly.TextSize = 14.000
+Fly.TextWrapped = true
+Fly.MouseButton1Click:connect(function()
+	local plr = game.Players.LocalPlayer
+	local mouse = plr:GetMouse()
+
+	localplayer = plr
+
+	if workspace:FindFirstChild("Core") then
+		workspace.Core:Destroy()
+	end
+
+	local Core = Instance.new("Part")
+	Core.Name = "Core"
+	Core.Size = Vector3.new(0.05, 0.05, 0.05)
+
+	spawn(function()
+		Core.Parent = workspace
+		local Weld = Instance.new("Weld", Core)
+		Weld.Part0 = Core
+		Weld.Part1 = localplayer.Character.LowerTorso
+		Weld.C0 = CFrame.new(0, 0, 0)
+	end)
+
+	workspace:WaitForChild("Core")
+
+	local torso = workspace.Core
+	flying = true
+	local speed=10
+	local keys={a=false,d=false,w=false,s=false}
+	local e1
+	local e2
+	local function start()
+		local pos = Instance.new("BodyPosition",torso)
+		local gyro = Instance.new("BodyGyro",torso)
+		pos.Name="EPIXPOS"
+		pos.maxForce = Vector3.new(math.huge, math.huge, math.huge)
+		pos.position = torso.Position
+		gyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+		gyro.cframe = torso.CFrame
+		repeat
+			wait()
+			localplayer.Character.Humanoid.PlatformStand=true
+			local new=gyro.cframe - gyro.cframe.p + pos.position
+			if not keys.w and not keys.s and not keys.a and not keys.d then
+				speed=5
+			end
+			if keys.w then
+				new = new + workspace.CurrentCamera.CoordinateFrame.lookVector * speed
+				speed=speed+0
+			end
+			if keys.s then
+				new = new - workspace.CurrentCamera.CoordinateFrame.lookVector * speed
+				speed=speed+0
+			end
+			if keys.d then
+				new = new * CFrame.new(speed,0,0)
+				speed=speed+0
+			end
+			if keys.a then
+				new = new * CFrame.new(-speed,0,0)
+				speed=speed+0
+			end
+			if speed>10 then
+				speed=5
+			end
+			pos.position=new.p
+			if keys.w then
+				gyro.cframe = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(-math.rad(speed*0),0,0)
+			elseif keys.s then
+				gyro.cframe = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(math.rad(speed*0),0,0)
+			else
+				gyro.cframe = workspace.CurrentCamera.CoordinateFrame
+			end
+		until flying == false
+		if gyro then gyro:Destroy() end
+		if pos then pos:Destroy() end
+		flying=false
+		localplayer.Character.Humanoid.PlatformStand=false
+		speed=10
+	end
+	e1=mouse.KeyDown:connect(function(key)
+		if not torso or not torso.Parent then flying=false e1:disconnect() e2:disconnect() return end
+		if key=="w" then
+			keys.w=true
+		elseif key=="s" then
+			keys.s=true
+		elseif key=="a" then
+			keys.a=true
+		elseif key=="d" then
+			keys.d=true
+		elseif key=="x" then
+			if flying==true then
+				flying=false
+			else
+				flying=true
+				start()
+			end
+		end
+	end)
+	e2=mouse.KeyUp:connect(function(key)
+		if key=="w" then
+			keys.w=false
+		elseif key=="s" then
+			keys.s=false
+		elseif key=="a" then
+			keys.a=false
+		elseif key=="d" then
+			keys.d=false
+		end
+	end)
+	start()
+end)
+
+HoodShark.Name = "HoodShark"
+HoodShark.Parent = Makx
+HoodShark.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+HoodShark.BorderSizePixel = 0
+HoodShark.Position = UDim2.new(0.513443053, 0, 0.0379310362, 0)
+HoodShark.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+HoodShark.Font = Enum.Font.GothamBlack
+HoodShark.Text = "HoodShark"
+HoodShark.TextColor3 = Color3.fromRGB(0, 0, 0)
+HoodShark.TextSize = 14.000
+HoodShark.TextWrapped = true
+HoodShark.MouseButton1Click:connect(function()
+	loadstring(game:HttpGet('https://pastebin.com/raw/GZzx6z2R'))()
+end)
+
+SwagMode.Name = "SwagMode"
+SwagMode.Parent = Makx
+SwagMode.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+SwagMode.BorderSizePixel = 0
+SwagMode.Position = UDim2.new(0.024212271, 0, 0.172413796, 0)
+SwagMode.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+SwagMode.Font = Enum.Font.GothamBlack
+SwagMode.Text = "SwagMode"
+SwagMode.TextColor3 = Color3.fromRGB(0, 0, 0)
+SwagMode.TextSize = 14.000
+SwagMode.TextWrapped = true
+SwagMode.MouseButton1Click:connect(function()
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/lerkermer/lua-projects/master/SwagModeV002'))()
+end)
+
+AntiLose.Name = "AntiLose"
+AntiLose.Parent = Makx
+AntiLose.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+AntiLose.BorderSizePixel = 0
+AntiLose.Position = UDim2.new(0.513443053, 0, 0.172413796, 0)
+AntiLose.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+AntiLose.Font = Enum.Font.GothamBlack
+AntiLose.Text = "AntiLose/AntiStomp"
+AntiLose.TextColor3 = Color3.fromRGB(0, 0, 0)
+AntiLose.TextSize = 14.000
+AntiLose.TextWrapped = true
+AntiLose.MouseButton1Click:connect(function()
+	pcall(function() if tostring(game.PlaceId) == "2788229376" then local corepackages = game:GetService"CorePackages" local localplayer = game:GetService"Players".LocalPlayer local run = game:GetService"RunService" run:BindToRenderStep("rrrrrrrrrrr",2000,function() pcall(function() if localplayer.Character.Humanoid.Health <= 30 then localplayer.Character.Humanoid:UnequipTools() localplayer.Character.Humanoid:Destroy() workspace.CurrentCamera.CameraSubject = localplayer.Character wait() local prt = Instance.new("Model", corepackages); Instance.new("Part", prt).Name="Torso"; Instance.new("Part", prt).Name="Head"; Instance.new("Humanoid", prt).Name="Humanoid"; localplayer.Character=prt end end) pcall(function() if localplayer.Character.Humanoid.FloorMaterial == "Plastic" then ReplicatedStorage:FireServer("Stomp") end end) end) loadstring(game:HttpGet("https://pastebin.com/raw/MQ3wc7Zq", true))() end end)
+end)
+
+FishReach.Name = "FishReach"
+FishReach.Parent = Makx
+FishReach.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+FishReach.BorderSizePixel = 0
+FishReach.Position = UDim2.new(0.024212271, 0, 0.306896567, 0)
+FishReach.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+FishReach.Font = Enum.Font.GothamBlack
+FishReach.Text = "FishReach"
+FishReach.TextColor3 = Color3.fromRGB(0, 0, 0)
+FishReach.TextSize = 14.000
+FishReach.TextWrapped = true
+FishReach.MouseButton1Click:connect(function()
+	loadstring(game:HttpGet('https://pastebin.com/raw/aZHK690D'))()
+end)
+
+CrashServer.Name = "CrashServer"
+CrashServer.Parent = Makx
+CrashServer.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+CrashServer.BorderSizePixel = 0
+CrashServer.Position = UDim2.new(0.513443053, 0, 0.306896567, 0)
+CrashServer.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+CrashServer.Font = Enum.Font.GothamBlack
+CrashServer.Text = "Crash Server/ Loud Sound"
+CrashServer.TextColor3 = Color3.fromRGB(0, 0, 0)
+CrashServer.TextSize = 14.000
+CrashServer.TextWrapped = true
+CrashServer.MouseButton1Click:connect(function()
+	sounds = {}
+
+	function getSounds(loc)
+		if loc:IsA("Sound") then
+			table.insert(sounds,loc)
+		end
+		for _,obj in pairs(loc:GetChildren()) do
+			getSounds(obj)
+		end
+	end
+
+	getSounds(game)
+
+	game.DescendantAdded:connect(function(obj)
+		if obj:IsA("Sound") then
+			table.insert(sounds,obj)
+		end
+	end)
+
+	while wait(0.2) do
+		for _,sound in pairs(sounds) do
+			pcall(function()
+				sound:Play()
+			end)
+		end
+	end
+end)
+
+Cancel.Name = "Cancel"
+Cancel.Parent = Makx
+Cancel.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+Cancel.BackgroundTransparency = 1.000
+Cancel.BorderSizePixel = 0
+Cancel.Position = UDim2.new(-0.0188646447, 0, -0.113793105, 0)
+Cancel.Size = UDim2.new(0.110769227, 0, 0.11379312, 0)
+Cancel.Font = Enum.Font.GothamBlack
+Cancel.Text = "X"
+Cancel.TextColor3 = Color3.fromRGB(255, 0, 0)
+Cancel.TextScaled = true
+Cancel.TextSize = 14.000
+Cancel.TextWrapped = true
+
+Faded.Name = "Faded"
+Faded.Parent = Makx
+Faded.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+Faded.BorderSizePixel = 0
+Faded.Position = UDim2.new(0.024212271, 0, 0.517241359, 0)
+Faded.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+Faded.Font = Enum.Font.GothamBlack
+Faded.Text = "Faded"
+Faded.TextColor3 = Color3.fromRGB(0, 0, 0)
+Faded.TextSize = 14.000
+Faded.TextWrapped = true
+Faded.MouseButton1Click:connect(function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/NighterEpic/Faded/main/YesEpic", true))()
+end)
+
+AutoArrest.Name = "AutoArrest"
+AutoArrest.Parent = Makx
+AutoArrest.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+AutoArrest.BorderSizePixel = 0
+AutoArrest.Position = UDim2.new(0.513443053, 0, 0.517241359, 0)
+AutoArrest.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+AutoArrest.Font = Enum.Font.GothamBlack
+AutoArrest.Text = "Auto Arrest/By RayCodeX"
+AutoArrest.TextColor3 = Color3.fromRGB(0, 0, 0)
+AutoArrest.TextSize = 14.000
+AutoArrest.TextWrapped = true
+AutoArrest.MouseButton1Click:connect(function()
+	loadstring(game:HttpGet(("https://raw.githubusercontent.com/Raycodex/Exploiting/main/Roblox/Da%20Hood%20Auto%20Arrest"), true))()
+end)
+
+AutoDrop.Name = "AutoDrop"
+AutoDrop.Parent = Makx
+AutoDrop.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+AutoDrop.BorderSizePixel = 0
+AutoDrop.Position = UDim2.new(0.024212271, 0, 0.648275912, 0)
+AutoDrop.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+AutoDrop.Font = Enum.Font.GothamBlack
+AutoDrop.Text = "RayCodeX Auto Drop"
+AutoDrop.TextColor3 = Color3.fromRGB(0, 0, 0)
+AutoDrop.TextSize = 14.000
+AutoDrop.TextWrapped = true
+AutoDrop.MouseButton1Click:connect(function()
+	loadstring(game:HttpGet(("https://raw.githubusercontent.com/Raycodex/Exploiting/main/Roblox/Da%20Hood%20Auto%20Cash%20Drop"), true))()
+end)
+
+News.Name = "News"
+News.Parent = Makx
+News.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+News.BackgroundTransparency = 1.000
+News.Position = UDim2.new(0.350769222, 0, 0.437931061, 0)
+News.Size = UDim2.new(0.29805851, 0, 0.0793103427, 0)
+News.Font = Enum.Font.GothamBlack
+News.Text = "News"
+News.TextColor3 = Color3.fromRGB(255, 0, 0)
+News.TextScaled = true
+News.TextSize = 14.000
+News.TextWrapped = true
+
+RayCodeX.Name = "RayCodeX"
+RayCodeX.Parent = Makx
+RayCodeX.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+RayCodeX.BorderSizePixel = 0
+RayCodeX.Position = UDim2.new(0.513443053, 0, 0.648275912, 0)
+RayCodeX.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+RayCodeX.Font = Enum.Font.GothamBlack
+RayCodeX.Text = "RayCodeX"
+RayCodeX.TextColor3 = Color3.fromRGB(0, 0, 0)
+RayCodeX.TextSize = 14.000
+RayCodeX.TextWrapped = true
+RayCodeX.MouseButton1Click:connect(function()
+	loadstring(game:GetObjects("rbxassetid://5812737894")[1].Source)()
+end)
+
+Nova.Name = "Nova"
+Nova.Parent = Makx
+Nova.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+Nova.BorderSizePixel = 0
+Nova.Position = UDim2.new(0.024212271, 0, 0.775862098, 0)
+Nova.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+Nova.Font = Enum.Font.GothamBlack
+Nova.Text = "NovaGui"
+Nova.TextColor3 = Color3.fromRGB(0, 0, 0)
+Nova.TextSize = 14.000
+Nova.TextWrapped = true
+Nova.MouseButton1Click:connect(function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/IcxyLol/Nova-Gui-New/main/README.md", true))()
+end)
+
+AutoRob.Name = "AutoRob"
+AutoRob.Parent = Makx
+AutoRob.BackgroundColor3 = Color3.fromRGB(45, 8, 255)
+AutoRob.BorderSizePixel = 0
+AutoRob.Position = UDim2.new(0.513443053, 0, 0.775862038, 0)
+AutoRob.Size = UDim2.new(0.467692316, 0, 0.103448279, 0)
+AutoRob.Font = Enum.Font.GothamBlack
+AutoRob.Text = "AutoRob"
+AutoRob.TextColor3 = Color3.fromRGB(0, 0, 0)
+AutoRob.TextSize = 14.000
+AutoRob.TextWrapped = true
+AutoRob.MouseButton1Click:connect(function()
+	loadstring(game:HttpGet('https://pastebin.com/raw/3L5CTn8J'))()
+end)
+
+Coming.Name = "Coming"
+Coming.Parent = Makx
+Coming.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Coming.BackgroundTransparency = 1.000
+Coming.Position = UDim2.new(0.184615374, 0, 1, 0)
+Coming.Size = UDim2.new(0.630366206, 0, 0.100000001, 0)
+Coming.Font = Enum.Font.GothamBlack
+Coming.Text = "More Coming Soon!"
+Coming.TextColor3 = Color3.fromRGB(0, 0, 0)
+Coming.TextScaled = true
+Coming.TextSize = 14.000
+Coming.TextWrapped = true
+
+local function MKNOU_fake_script()
+	local script = Instance.new('LocalScript', Script)
+
+	script.Parent.Open.MouseButton1Click:Connect(function()
+		script.Parent.Makx.Visible = true
+		script.Parent.Open.Visible = false
+	end)
+	
+	script.Parent.Makx.Cancel.MouseButton1Click:Connect(function()
+		script.Parent.Makx.Visible = false
+		script.Parent.Open.Visible = true
+	end)
+end
+coroutine.wrap(MKNOU_fake_script)()
